@@ -1,0 +1,93 @@
+<div class="pageBody" ng-controller="BuyerController as buyCtrl">
+	<ul class="nav nav-pills nav-justified">
+		<li class="nav-item">
+			<a class="nav-link active" data-toggle="pill" data-target="#products" href="#" role="pill">Products</a>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link" data-toggle="pill" data-target="#cart" href="#" role="pill">Cart</a>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link" data-toggle="pill" data-target="#orders" href="#" role="pill">Orders</a>
+		</li>
+	</ul>
+	<br>
+
+	<div class="container">
+		<div class="tab-content">
+			<div class="tab-pane show active" id="products" role="pillpanel">
+				<div class="card-deck">
+					<div class="card col-sm-4" ng-repeat="product in filteredItems  = (buyCtrl.products)">
+						<img class="card-img-top" src="{{product.imgURL}}" alt="Card image cap">
+						<div class="card-block">
+							<h4 class="card-title">{{product.name}}</h4>
+							<p class="card-text">Price: {{product.price}}</p>
+							<br>
+							<button class="btn btn-sm" ng-click="buyCtrl.addProductToCart(product)">Add to Cart</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<br>
+			<div class="tab-pane" id="cart" role="pillpanel">
+				
+				<div class="card-deck">
+					<div class="card col-sm-4" ng-repeat="product in buyCtrl.cartproducts">
+						<img class="card-img-top" src="{{product.imgURL}}" alt="Card image cap">
+						<div class="card-block">
+							<h4 class="card-title">{{product.name}}</h4>
+							<p class="card-text">Price: {{product.price}}</p>
+							<p class="card-text">Quantity: {{buyCtrl.cartproductsinfo[$index].quantity}}</p>
+							<p class="card-text">Amount: <b>{{product.price*buyCtrl.cartproductsinfo[$index].quantity}}</b></p>
+						</div>
+					</div>
+				</div>
+				<br>
+				<hr>
+				<textarea placeholder="Shipping Address" rows="4" cols="50" ng-model="buyCtrl.address"></textarea>
+				<b style="float: right;">
+					Total: {{buyCtrl.totalAmount}}
+					<br>
+					<button class="btn btn-success" ng-click="buyCtrl.placeOrder()">Order</button>
+				</b>
+			</div>
+			<div class="tab-pane" id="orders" role="pillpanel">
+				<div ng-repeat="order in buyCtrl.orders">
+					ORDER id: <b>'{{order._id}}'</b> amounting to <b>{{order.totalAmount}}</b>.
+					<br>
+					<p>Shipping Address: {{order.address}}</p>
+					<div class="card-deck">
+						<div class="card col-sm-4" ng-repeat="product in order.products">
+							<img class="card-img-top" src="{{product.imgURL}}" alt="Card image cap">
+							<div class="card-block">
+								<h4 class="card-title">{{product.name}}</h4>
+								<p class="card-text">Price: {{product.price}}</p>
+								<p class="card-text">Quantity: {{order.products_info[$index].quantity}}</p>
+								<p class="card-text">Amount: <b>{{product.price*order.products_info[$index].quantity}}</b></p>
+								<p class="card-text">Status: {{order.products_info[$index].status}}</p>
+							</div>
+						</div>
+					</div>
+					<hr>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<style>
+	.pageBody{
+		padding: 2%;
+		background: #fafafa;
+		color: black;
+	}
+	.card{
+		margin: 16px;
+		max-width: 30%;
+	}
+	img{
+		position: relative;
+		max-width: 100%;
+		max-height: 100%;
+	}
+</style>

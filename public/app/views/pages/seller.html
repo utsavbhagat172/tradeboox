@@ -1,0 +1,86 @@
+<div class="pageBody" ng-controller="SellerController as selCtrl">
+	<ul class="nav nav-pills nav-justified">
+		<li class="nav-item">
+			<a class="nav-link active" data-toggle="pill" data-target="#myproducts" href="#" role="pill">MyProducts</a>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link" data-toggle="pill" data-target="#addproduct" href="#" role="pill">Add Product</a>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link" data-toggle="pill" data-target="#orders" href="#" role="pill">Orders</a>
+		</li>
+	</ul>
+	<br>
+
+	<div class="container">
+		<div class="tab-content">
+			<div class="tab-pane show active" id="myproducts" role="pillpanel">
+				<div class="card-deck">
+					<div class="card col-sm-4" ng-repeat="product in filteredItems  = (selCtrl.myproducts)">
+						<img class="card-img-top" src="{{product.imgURL}}" alt="Card image cap">
+						<div class="card-block">
+							<h4 class="card-title"><a href="/product/{{product.name}}">{{product.name}}</a></h4>
+							<p class="card-text">Price: {{product.price}}</p>
+							<p class="card-text"><small class="text-muted">Stock: {{product.stock}}</small></p>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="tab-pane" id="addproduct" role="pillpanel">
+				<div class="container">
+					<form  class="form-sigin" method="post" ng-submit="selCtrl.addProduct()">
+						Name: <input type="text" name="name" class="form-control" ng-model="selCtrl.newProductData.name">
+						Stock: <input type="number" name="stock" class="form-control" ng-model="selCtrl.newProductData.stock">
+						Price: <input type="number" name="price" class="form-control" ng-model="selCtrl.newProductData.price">
+						imgURL: <input type="text" name="imgURL" class="form-control" ng-model="selCtrl.newProductData.imgURL">
+						<br>
+						<button type="submit" class="btn btn-danger">Add</button>
+					</form>
+				</div>
+
+			</div>
+
+			<div class="tab-pane" id="orders" role="pillpanel">
+				<div ng-repeat="order in selCtrl.orders">
+					ORDER id: <b>'{{order._id}}'</b> amounting to <b>{{order.totalAmount}}</b>.
+					<br>
+					<p>Shipping Address: {{order.address}}</p>
+					<div class="card-deck">
+						<div class="card col-sm-4" ng-repeat="product in order.products" ng-if="product.creator==main.user.id">
+							<img class="card-img-top" src="{{product.imgURL}}" alt="Card image cap">
+							<div class="card-block">
+								<h4 class="card-title">{{product.name}}</h4>
+								<p class="card-text">Price: {{product.price}}</p>
+								<p class="card-text">Quantity: {{order.products_info[$index].quantity}}</p>
+								<p class="card-text">Amount: <b>{{product.price*order.products_info[$index].quantity}}</b></p>
+								<p class="card-text">Status: {{order.products_info[$index].status}}</p>
+								<button class="btn btn-sm btn-success" ng-click="selCtrl.markProductShipped(order, $index)">Mark as Shipped</button>
+							</div>
+						</div>
+					</div>
+					<hr>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+<style>
+	.pageBody{
+		padding: 2%;
+		background: #fafafa;
+		color: black;
+	}
+	.card{
+		margin: 16px;
+		max-width: 30%;
+	}
+	img{
+		position: relative;
+		max-width: 100%;
+		max-height: 100%;
+	}
+</style>
